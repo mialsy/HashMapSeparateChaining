@@ -41,15 +41,18 @@ public class HashMap<K, V> implements Map<K, V>, Iterable<HashMap.Node<K, V>> {
          * @return {@code true} if the iterator has next
          */
         public boolean hasNext() {
-            if (next != null) {
-                next = next.next;
+            Node<K,V> cur = next;
+            int c = count;
+
+            if (cur != null) {
+                cur = cur.next;
             }
 
-            while (next == null && ++count < array.length) {
-                next = array[count];
+            while (cur == null && ++c < array.length) {
+                cur = array[c];
             }
 
-            return next != null;
+            return cur != null;
         }
 
         /**
@@ -57,7 +60,14 @@ public class HashMap<K, V> implements Map<K, V>, Iterable<HashMap.Node<K, V>> {
          * @return next in the iterator
          */
         public T next() {
-            return (T)next;
+            if (next != null) {
+                next = next.next;
+            }
+
+            while (next == null && ++count < array.length) {
+                next = array[count];
+            }
+            return (T) next;
         }
     }
 
